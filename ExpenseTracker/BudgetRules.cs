@@ -27,7 +27,14 @@ public static class BudgetRules
     public static decimal ValidateAmount(decimal amount)
     {
         // TODO: guard clauses + decimal.Round(amount, 2)
-        throw new NotImplementedException();
+        if (amount <= 0 || amount > MaxAmount)
+        {
+            throw new InvalidExpenseException("Amount is not accutare ");
+        }
+        else
+        {
+            return decimal.Round(amount, 2);
+        }
     }
 
     /// <summary>
@@ -39,8 +46,27 @@ public static class BudgetRules
     public static string ClassifyAmount(decimal amount)
     {
         // TODO
-        throw new NotImplementedException();
+        string classifyValue = null;
+        switch (amount)
+        {
+            case <= 0:
+                throw new InvalidExpenseException("Amount is not positive");
+            case < 10:
+                classifyValue = "Micro";
+                break;
+            case < 50:
+                classifyValue = "Small";
+                break;
+            case < 200:
+                classifyValue = "Medium";
+                break;
+            default:
+                classifyValue = "Large";
+                break;
+        }
+        return classifyValue;
     }
+
 
     /// <summary>
     /// Maps free-text input to one of the five canonical category names
@@ -51,9 +77,26 @@ public static class BudgetRules
     /// </summary>
     public static string? NormalizeCategory(string? input)
     {
-        // TODO
-        throw new NotImplementedException();
+        switch (input?.Trim().ToLower())
+
+        {
+            case "f" or "food":
+                return "Food";
+
+            case "t" or "transport":
+                return "Transport";
+
+            case "u" or "utilities":
+                return "Utilities";
+            case "e" or "entertainment":
+                return "Entertainment";
+            case "o" or "other":
+                return "Other";
+            default:
+                return null;
+        }
     }
+    // TODO
 
     /// <summary>
     /// Returns a budget-status message from the remaining funds and the limit:
@@ -63,6 +106,23 @@ public static class BudgetRules
     public static string BudgetStatus(decimal remaining, decimal monthlyLimit)
     {
         // TODO
+        decimal NearLimitFraction = 0.10m;
+        if (monthlyLimit <= 0)
+        {
+            throw new InvalidExpenseException("Limit is not positive");
+        }
+        else if (remaining < 0)
+        {
+            return "OVER BUDGET";
+        }
+        else if (remaining < monthlyLimit * NearLimitFraction)
+        {
+            return "Almost out";
+        }
+        else
+        {
+            return "On track";
+        }
         throw new NotImplementedException();
     }
 
