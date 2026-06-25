@@ -12,6 +12,8 @@
 //  Work one method at a time. Run the tests, watch them turn green.
 //  All methods are pure: no Console I/O, no shared state.
 // =====================================================================
+using System.Linq.Expressions;
+
 namespace ExpenseTracker;
 
 public static class BudgetRules
@@ -26,15 +28,12 @@ public static class BudgetRules
     /// </summary>
     public static decimal ValidateAmount(decimal amount)
     {
-        // TODO: guard clauses + decimal.Round(amount, 2)
-        if (amount <= 0 || amount > MaxAmount)
-        {
-            throw new InvalidExpenseException("Amount is not accutare ");
-        }
-        else
-        {
-            return decimal.Round(amount, 2);
-        }
+
+        if (amount <= 0 || amount >= MaxAmount)
+            throw new InvalidExpenseException("this amount is not valid lalalala ");
+
+        return decimal.Round(amount, 2);
+
     }
 
     /// <summary>
@@ -46,27 +45,28 @@ public static class BudgetRules
     public static string ClassifyAmount(decimal amount)
     {
         // TODO
-        string classifyValue = null;
+        var response = "";
+
         switch (amount)
         {
             case <= 0:
-                throw new InvalidExpenseException("Amount is not positive");
+                throw new InvalidExpenseException("oooh no!");
             case < 10:
-                classifyValue = "Micro";
+                response = "Micro";
                 break;
             case < 50:
-                classifyValue = "Small";
+                response = "Small";
                 break;
             case < 200:
-                classifyValue = "Medium";
+                response = "Medium";
                 break;
             default:
-                classifyValue = "Large";
+                response = "Large";
                 break;
         }
-        return classifyValue;
+        return response;
+        //throw new NotImplementedException();
     }
-
 
     /// <summary>
     /// Maps free-text input to one of the five canonical category names
@@ -77,15 +77,14 @@ public static class BudgetRules
     /// </summary>
     public static string? NormalizeCategory(string? input)
     {
-        switch (input?.Trim().ToLower())
-
+        // TODO
+        string? cleanInput = input?.ToLower().Trim();
+        switch (cleanInput)
         {
             case "f" or "food":
                 return "Food";
-
             case "t" or "transport":
                 return "Transport";
-
             case "u" or "utilities":
                 return "Utilities";
             case "e" or "entertainment":
@@ -96,7 +95,6 @@ public static class BudgetRules
                 return null;
         }
     }
-    // TODO
 
     /// <summary>
     /// Returns a budget-status message from the remaining funds and the limit:
@@ -105,45 +103,32 @@ public static class BudgetRules
     /// </summary>
     public static string BudgetStatus(decimal remaining, decimal monthlyLimit)
     {
+        decimal lessThan10percent = monthlyLimit * 0.1m;
+
         // TODO
-        decimal NearLimitFraction = 0.10m;
         if (monthlyLimit <= 0)
-        {
-            throw new InvalidExpenseException("Limit is not positive");
-        }
+            throw new InvalidExpenseException("this amount is not valid at all");
         else if (remaining < 0)
-        {
             return "OVER BUDGET";
-        }
-        else if (remaining < monthlyLimit * NearLimitFraction)
-        {
+        else if (remaining < lessThan10percent)
             return "Almost out";
-        }
         else
-        {
             return "On track";
-        }
-        throw new NotImplementedException();
+
     }
 
     /// <summary>
     /// Formats an amount as currency using the default "$" symbol.
     /// Implement this as an expression-bodied member that calls the overload.
     /// </summary>
-    public static string FormatCurrency(decimal amount)
-    {
-        // TODO: return FormatCurrency(amount, "$");
-        throw new NotImplementedException();
-    }
+    public static string FormatCurrency(decimal amount) => FormatCurrency(amount, "$");
+
 
     /// <summary>
     /// Formats an amount as currency using the given symbol, e.g. "$62.40".
     /// </summary>
-    public static string FormatCurrency(decimal amount, string currencySymbol)
-    {
-        // TODO: use a "0.00" format string
-        throw new NotImplementedException();
-    }
+    public static string FormatCurrency(decimal amount, string currencySymbol) => $"{currencySymbol}{amount:0.00}";
+
 }
 
 /// <summary>
