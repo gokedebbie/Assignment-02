@@ -186,6 +186,8 @@ do
 
 Console.Clear();
 
-Console.WriteLine("MyBudget — TODO: make an interactive menu UI (see the brief).");
+Console.WriteLine("Thank you for using the Expense Tracker! Bye.");
+
+//Console.WriteLine("MyBudget — TODO: make an interactive menu UI (see the brief).");
 
 // Delete the line above and implement the application here.
